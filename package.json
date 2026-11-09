@@ -1,0 +1,15 @@
+{
+  "name": "cypress-security-testing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio de automacao de testes funcionais e de seguranca com Cypress e JavaScript",
+  "scripts": {
+    "cy:open": "cypress open",
+    "test": "cypress run",
+    "test:base64": "cypress run --spec \"cypress/e2e/base64/base64.cy.js\"",
+    "test:xss": "cypress run --spec \"cypress/e2e/base64/xss-regression.cy.js\""
+  },
+  "devDependencies": {
+    "cypress": "^16.2.1"
+  }
+}

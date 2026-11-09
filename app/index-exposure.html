@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Laboratório Base64 - Exposição Intencional</title>
+</head>
+
+<body>
+
+  <h1>Laboratório Base64 - Exposição Intencional</h1>
+
+  <p>
+    Ambiente controlado para demonstrar
+    armazenamento inseguro de informações fictícias.
+  </p>
+
+  <p>
+    <strong>Atenção:</strong>
+    esta aplicação contém uma falha de segurança intencional.
+    Utilize exclusivamente os dados fictícios definidos
+    para os testes CT-006 e CT-008.
+  </p>
+
+  <label for="texto">Credencial fictícia:</label>
+
+  <input
+    id="texto"
+    data-cy="entrada"
+    type="text"
+    autocomplete="off"
+    spellcheck="false"
+  >
+
+  <button data-cy="codificar" type="button">
+    Codificar e armazenar
+  </button>
+
+  <p>
+    Resultado:
+    <span data-cy="resultado"></span>
+  </p>
+
+  <script>
+
+    // =====================================================
+    // ELEMENTOS DA APLICAÇÃO
+    // =====================================================
+
+    const entrada = document.querySelector(
+      '[data-cy="entrada"]'
+    );
+
+    const resultado = document.querySelector(
+      '[data-cy="resultado"]'
+    );
+
+
+    // =====================================================
+    // CONFIGURAÇÃO DO LABORATÓRIO
+    // =====================================================
+
+    // Somente os valores fictícios utilizados nos testes
+    // automatizados podem ser processados e armazenados.
+
+    const credenciaisPermitidas = new Set([
+      'CT006_CREDENCIAL_FICTICIA_42',
+      'CT008_CREDENCIAL_FICTICIA_42'
+    ]);
+
+    // Manter a chave original para compatibilidade
+    // com os testes CT-006 e CT-008.
+
+    const chaveArmazenamento = 'ct006_credencial_simulada';
+
+
+    // =====================================================
+    // CODIFICAÇÃO E ARMAZENAMENTO INTENCIONALMENTE INSEGURO
+    // =====================================================
+
+    document.querySelector('[data-cy="codificar"]')
+      .addEventListener('click', () => {
+
+        const texto = entrada.value;
+
+
+        // =================================================
+        // ETAPA 1 - VALIDAR DADOS FICTÍCIOS
+        // =================================================
+
+        // Impedir que textos arbitrários sejam armazenados
+        // pelo laboratório.
+
+        if (!credenciaisPermitidas.has(texto)) {
+
+          resultado.textContent =
+            'Utilize apenas os dados fictícios permitidos no laboratório';
+
+          return;
+        }
+
+
+        // =================================================
+        // ETAPA 2 - CODIFICAR EM BASE64
+        // =================================================
+
+        let base64;
+
+        try {
+
+          // Converter o texto para bytes UTF-8.
+          const bytes = new TextEncoder().encode(texto);
+
+          // Converter os bytes para uma string binária.
+          const binario = Array.from(
+            bytes,
+            byte => String.fromCharCode(byte)
+          ).join('');
+
+          // Realizar a codificação Base64.
+          base64 = btoa(binario);
+
+        } catch (erro) {
+
+          resultado.textContent = 'Erro na codificação';
+
+          return;
+        }
+
+
+        // =================================================
+        // ETAPA 3 - ARMAZENAMENTO INSEGURO INTENCIONAL
+        // =================================================
+
+        /*
+         * FALHA DE SEGURANÇA INTENCIONAL
+         *
+         * O valor Base64 será armazenado no Local Storage.
+         *
+         * Base64 é uma codificação reversível e não
+         * fornece confidencialidade.
+         *
+         * Scripts da mesma origem podem acessar
+         * o valor armazenado.
+         *
+         * Este comportamento é necessário para
+         * os testes de segurança CT-006 e CT-008.
+         *
+         * Nunca utilizar com credenciais reais.
+         */
+
+        try {
+
+          localStorage.setItem(
+            chaveArmazenamento,
+            base64
+          );
+
+        } catch (erro) {
+
+          resultado.textContent =
+            'Erro ao armazenar os dados fictícios';
+
+          return;
+        }
+
+
+        // =================================================
+        // ETAPA 4 - APRESENTAR O RESULTADO
+        // =================================================
+
+        // Somente apresentar o Base64 depois que a
+        // operação de armazenamento for concluída.
+
+        // textContent evita interpretar o valor como HTML.
+        resultado.textContent = base64;
+
+      });
+
+  </script>
+
+</body>
+</html>

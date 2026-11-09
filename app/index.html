@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Laboratório Base64 - Versão Segura</title>
+</head>
+
+<body>
+
+  <h1>Laboratório Base64 - Versão Segura</h1>
+
+  <p>
+    Ambiente de laboratório para testes funcionais
+    e de segurança com Base64.
+  </p>
+
+  <label for="texto">Digite um texto:</label>
+
+  <input
+    id="texto"
+    data-cy="entrada"
+    type="text"
+  >
+
+  <button data-cy="codificar" type="button">
+    Codificar
+  </button>
+
+  <button data-cy="decodificar" type="button">
+    Decodificar
+  </button>
+
+  <p>
+    Resultado:
+    <span data-cy="resultado"></span>
+  </p>
+
+  <script>
+
+    // ===========================================
+    // ELEMENTOS DA APLICAÇÃO
+    // ===========================================
+
+    const entrada = document.querySelector(
+      '[data-cy="entrada"]'
+    );
+
+    const resultado = document.querySelector(
+      '[data-cy="resultado"]'
+    );
+
+
+    // ===========================================
+    // CODIFICAÇÃO BASE64
+    // ===========================================
+
+    document.querySelector('[data-cy="codificar"]')
+      .addEventListener('click', () => {
+
+        try {
+
+          // Converter texto para bytes UTF-8
+          const bytes = new TextEncoder().encode(
+            entrada.value
+          );
+
+          // Converter bytes para string binária
+          const binario = Array.from(
+            bytes,
+            byte => String.fromCharCode(byte)
+          ).join('');
+
+          // Codificar Base64
+          resultado.textContent = btoa(binario);
+
+        } catch (erro) {
+
+          resultado.textContent = 'Erro na codificação';
+
+        }
+
+      });
+
+
+    // ===========================================
+    // DECODIFICAÇÃO BASE64
+    // ===========================================
+
+    document.querySelector('[data-cy="decodificar"]')
+      .addEventListener('click', () => {
+
+        try {
+
+          // Decodificar Base64
+          const binario = atob(entrada.value);
+
+          // Converter resultado para bytes
+          const bytes = Uint8Array.from(
+            binario,
+            caractere => caractere.charCodeAt(0)
+          );
+
+          // Recuperar texto UTF-8
+          const texto = new TextDecoder('utf-8', {
+            fatal: true
+          }).decode(bytes);
+
+
+          // =====================================
+          // PROTEÇÃO CONTRA XSS
+          // =====================================
+          //
+          // textContent apresenta o conteúdo
+          // como texto, sem interpretar HTML.
+          //
+          // Evita a criação de elementos HTML
+          // e a execução de scripts inseridos
+          // por meio do resultado decodificado.
+          //
+          // =====================================
+
+          resultado.textContent = texto;
+
+        } catch (erro) {
+
+          // Tratamento de entradas inválidas
+          resultado.textContent = 'Erro na decodificação';
+
+        }
+
+      });
+
+  </script>
+
+</body>
+</html>

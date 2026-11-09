@@ -1,0 +1,96 @@
+# =====================================================
+# CYPRESS SECURITY TESTING
+# Arquivos e diretórios ignorados pelo Git
+# =====================================================
+
+
+# =====================================================
+# 1. DEPENDÊNCIAS NODE.JS
+# =====================================================
+
+node_modules/
+
+
+# =====================================================
+# 2. ARQUIVOS GERADOS PELO CYPRESS
+# =====================================================
+
+# Capturas automáticas de execução
+cypress/screenshots/
+
+# Gravações automáticas dos testes
+cypress/videos/
+
+# Arquivos baixados durante os testes
+cypress/downloads/
+
+
+# =====================================================
+# 3. RELATÓRIOS E COBERTURA
+# =====================================================
+
+coverage/
+.nyc_output/
+
+# Relatórios gerados automaticamente
+test-results/
+allure-results/
+
+
+# =====================================================
+# 4. LOGS E ARQUIVOS TEMPORÁRIOS
+# =====================================================
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+*.tmp
+*.temp
+
+.cache/
+
+
+# =====================================================
+# 5. VARIÁVEIS DE AMBIENTE E DADOS SENSÍVEIS
+# =====================================================
+
+.env
+.env.*
+!.env.example
+
+# Chaves e certificados privados
+*.pem
+*.key
+*.p12
+*.pfx
+
+
+# =====================================================
+# 6. ARQUIVOS DO SISTEMA OPERACIONAL
+# =====================================================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+
+# =====================================================
+# 7. CONFIGURAÇÕES LOCAIS DE EDITORES
+# =====================================================
+
+.vscode/
+.idea/
+
+
+# =====================================================
+# 8. ARQUIVOS DE BACKUP
+# =====================================================
+
+*.bak
+*.backup
+*~
